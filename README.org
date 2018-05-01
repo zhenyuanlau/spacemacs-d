@@ -1,0 +1,8 @@
+* Spacemacs User Configuration
+** macOS Configuration
+   * Default Layers
+     - osx
+     - markdown
+     - git
+   * Power Line
+   * Font Size
