@@ -1,0 +1,450 @@
+#+TITLE: GNU Emacs Lisp 编程入门
+
+* 译者序
+C + Lisp -> GNU Emacs
+
+斯托曼的一个天才构想就是利用 C 语言编写与硬件直接作用的 GNU Emacs 模块, 而绝大多数文本编辑模块则统统利用 Lisp 语言来编写.
+
+为了保持源代码的可读性与一致性, 斯托曼将 GNU Emacs 中的 C 语言代码模块的函数名写得很像 Lisp 函数名.
+
+GNU Emacs 是一种 高级的 自带文档的 可定制的 可扩充的实时显示的 编辑器.
+
+斯托曼的这一天才的泛对称设计思想极富艺术性, 具有方法论研究的永久价值.
+
+* 前言
+Emacs 就是为了使你能用 Emacs Lisp 编写新的代码并能方便地作为编辑器的扩展部分来安装而设计的.
+
+Emacs 提供了比编辑更多的功能, 可视为 可扩展的计算环境
+
+* 列表处理
+Lisp = LISt Processing, 列表处理, 列表是 Lisp 的基础, 括号标记了列表的边界.
+
+** Lisp 列表
+在 Lisp 中, 一个列表 '(rose violet daisy buttercup)
+
+在 Lisp 中, 数据和程序都以同样的方式表示: 由空格分隔的, 由括号括起来的单词, 数字或者其他
+列表的列表.
+
+** Lisp 原子
+在 Lisp 中, 单词或数字等被称作 原子(atom). 原子意味着 不可分.
+
+在 Lisp 中, 一个列表可以拆分成不同的部分. car/cdr/cons
+
+在一个列表中, 原子是由空格分隔的. 原子可以紧接着括号.
+
+从技术上说, Lisp 中的一个列表有三种可能的组成方式
+
+1. 括号和括号中由空格分隔的原子
+2. 括号和括号中的其他列表
+3. 括号和括号中的其他列表及原子
+
+一个列表可以仅有一个原子或者完全没有原子.
+
+一个没有任何原子的列表, (), 被称作空列表.
+
+空列表既可以看作是一个原子,也可以看作是一个列表
+
+原子和列表的书面表示被称为符号表达式(symbolic expression), 或 s-表达式(s-expression)
+
+只要是涉及列表操作,列表中的原子就是不可分的.
+
+在 Lisp 中, 原子只有数字和符号等几种.
+
+Lisp 编程几乎都是关于列表中的符号的(且有时是关于数字的)
+
+在 Lisp 中, 所有用双引号括起来的文本, 包括标点符号和空格, 都是单个原子. 被称为 串
+
+字符串是不同于数字和符号的一种原子.
+
+*** 列表中的空格
+列表中空格的数量无关紧要.
+
+多余的空格和换行只不过是为了使人们易于阅读而设计的.
+
+*** GNU Emacs 帮助你输入列表
+在 GNU Emacs 中使用 Lisp 交互模式 或 Emacs Lisp 模式
+
+** 运行一个程序
+在 Lisp 中的一个列表 -- 任何列表 -- 都是一个准备运行的程序.
+
+如果你运行它(在 Lisp 的术语中, 称为 求值), 计算机将完成三件事情
+
+1. 只返回列表本身
+2. 告诉你一个出错的消息
+3. 将列表的第一个符号当做一个命令, 然后执行这个命令
+
+单引号(') 被称作 引用(quote) 
+
+当单引号位于一个列表之前时, 它告诉 Lisp 不要对这个列表做任何操作, 而仅仅按其原样
+
+如果一个列表前面没有引号, 这个列表的第一个符号就很特别了: 它是一条计算机要执行的命令(在 Lisp 中, 被称为函数)
+
+#+BEGIN_SRC elisp
+(+ 2 2)
+#+END_SRC
+
+#+RESULTS:
+: 4
+
+Lisp 解释器 能将 人 能理解的表达式 翻译成 计算机的语言
+
+** 产生错误消息
+错误消息是能提供有用信息的.
+
+** 符号名和函数定义
+一个符号, 它本身并不是计算机执行的指令本身.
+
+符号或许是临时用于定位函数或者一组指令的.
+
+符号只不过是一个名字而已, 通过这个名字可以找到相应的指令.
+
+在 Lisp 中, 一组指令可以连接到几个名字, 一个符号一次只能有一个函数定义与其连接
+
+** Lisp 解释器
+在我们命令 Lisp 解释器对一个列表求值时, 它做了些什么?
+
+1. 查看一下在列表前面是否有单引号: 
+如果有, 解释器就为我们给出这个列表; 
+如果没有, 解释器就查看列表的第一个元素
+2. 判断列表的第一个元素是否是一个函数定义 
+如果是, 就执行函数定义中的指令
+如果不是, 就打印一个错误消息
+
+这就是 Lisp 的工作方式.
+
+复杂的情况
+1. Lisp 解释器 对一个符号求值, 符号前既没有引号, 也没有括号
+2. Lisp 解释器 对 特殊表 进行求值,
+3. Lisp 解释器 对 嵌套列表 进行求值
+
+*字节编译* 
+*.elc
+
+** 求值
+在 Lisp 解释器 处理 一个表达式 时, 这个动作被称为 求值. 我们称, 解释器计算表达式的值.
+
+对一个符号表达式求值几乎总是使 Lisp 解释器返回一个值, 同时可能产生一个附带效果, 
+不然, 就产生一个错误消息. 
+
+*对一个内部列表求值*
+如果是对一个嵌套在另一个列表中的列表求值, 对外部列表求值时可以使用首先对内部列表求值所得的结果.
+
+这解释了为什么内层表达式总是首先被求值: 因为它们得返回值被用于外部表达式.
+
+** 变量
+
+在 Lisp 中, 可以将一个赋值给一个符号, 就像一个函数定义赋给一个符号那样.
+
+有值的一个符号通常被称为一个变量.
+
+一个符号可以同时具有一个函数定义和一个值.
+
+*符号无值时的错误消息*
+如果试图对一个没有赋值的符号求值, 将收到一个错误消息
+
+** 参量
+参量 来自于数学应用, 指 传递给函数的信息
+
+在 Lisp 中, 一个函数的参量是函数后面的原子或者列表.
+
+通过对传递给函数的原子或者列表求值, 得到返回值.
+
+不同的函数需要不同数目的参量; 有些函数根本不需要参量.
+
+*** 参量的数据类型
+应当传递给函数的数据的类型依赖于它使用什么信息.
+
+*** 作为变量和列表的值的参量
+参量可以是一个符号, 对这个符号求值将返回一个值.
+
+*** 数目可变的参量
+*** 用一个错误类型的数据对象作为参量
+当函数的一个参量被传送一个错误类型的数据时, Lisp 解释器产生一个错误消息.
+
+一般地说, 在学习了如何阅读错误消息之后, 错误消息将是有帮助的, 具有提示作用.
+
+*** message 函数
+message 函数的参量数目是可以变化的, 被用于给用户发送消息, 消息是打印在回显区中的.
+
+** 给一个变量赋值
+
+有几种方法给一个变量赋值: 其中一种方法是使用 set 函数 或者 setq 函数, 另一种是 let 函数
+
+*** 使用 set 函数
+#+BEGIN_SRC elisp
+(set 'flowers '(rose violet daisy buttercup))
+#+END_SRC
+
+#+RESULTS:
+| rose | violet | daisy | buttercup |
+
+*** 使用 setq 函数
+实际上, 人们几乎总是将 set 函数的第一个参量用单引号标出.
+
+setq 函数将其第一个参量自动地带上单引号, 并允许在一个表达式中将几个不同的变量设置成不同的值.
+
+set 和 setq 函数将符号指向列表.
+
+*** 计数
+
+** 小结
+- Lisp 程序由表达式组成, 表达式是列表或单个原子
+- 列表由 0 个或者更多的原子或者内部列表组成, 原子或者列表之间由空格分隔开, 并由括号括起来.
+- 列表可以是空的
+- 原子是多字符的符号, 单字符符号, 双引号之间的字符串, 或者数字
+- 对数字求值就是它本身
+- 对双引号之间的字符串求值也是其本身
+- 当对一个符号求值时, 将返回它的值
+- 当对一个列表求值时, Lisp 解释器查看列表中的第一个符号机器绑定在其上的函数定义. 然后这个函数定义中的指令被执行
+- 单引号告诉 Lisp 解释器返回后续表达式的书写形式, 而不是像没有单引号时那样对其求值
+- 参量是传递给函数的信息. 除了作为列表的第一个元素的函数之外, 通过对列表的其余元素求值来计算函数的参量.
+- 当对一个函数求值时总是返回一个值(除非得到一个错误消息). 另外, 它也可以完成一些被称为附带效果的操作. 在许多情况下, 一个函数的主要目的就是产生一个附带效果
+
+* 求值实践
+
+每当在 Emacs Lisp 中发出一个编辑命令, 就是在对一个表达式求值, 这就是 Emacs 的工作方式.
+
+当你击键时, 你使 Lisp 解释器对一个表达式求值, self-insert-command
+
+** 缓冲区名
+
+#+BEGIN_SRC elisp
+(buffer-name)
+#+END_SRC
+
+#+RESULTS:
+: gnu-emacs-lisp.org
+
+#+BEGIN_SRC elisp
+(buffer-file-name)
+#+END_SRC
+
+#+RESULTS:
+: /Users/zhenyuanlau/.spacemacs.d/katas/gnu-emacs-lisp.org
+
+文件和缓冲区是两个不同的实体.
+
+文件是永久记录在计算机中的信息; 缓冲区是 Emacs 内部的信息, 在 Emacs 编辑会话结束时就消失了
+
+缓冲区是一个中间部件, 一个临时存放区, 计算机的工作就是在这里进行的.
+
+
+并不是所有的缓冲区都与文件关联在一起. *scratch* *help*
+
+** 获得缓冲区
+
+#+BEGIN_SRC elisp
+(current-buffer)
+#+END_SRC
+
+#+RESULTS:
+: #<buffer gnu-emacs-lisp.org>
+
+buffer-name 函数返回缓冲区的名字; current-buffer 返回缓冲区本身
+
+一个名字与名字所指的对象或实体是互不相同的. 你不是你的名字, 你是用名字指向的人.
+
+#+BEGIN_SRC elisp
+(other-buffer)
+#+END_SRC
+
+#+RESULTS:
+: #<buffer *scratch*>
+
+** 切换缓冲区
+#+BEGIN_SRC elisp
+(switch-to-buffer (other-buffer))
+#+END_SRC
+
+#+RESULTS:
+: #<buffer *scratch*>
+
+当对第一个元素是一个函数的列表求值时, 就是在调用那个函数.
+
+** 缓冲区大小和位点的定位
+#+BEGIN_SRC elisp
+(buffer-size)
+#+END_SRC
+
+#+RESULTS:
+: 4106
+
+#+BEGIN_SRC elisp
+(point)
+#+END_SRC
+
+#+RESULTS:
+: 4152
+
+#+BEGIN_SRC elisp
+(point-min)
+#+END_SRC
+
+#+RESULTS:
+: 1
+
+#+BEGIN_SRC elisp
+(point-max)
+#+END_SRC
+
+#+RESULTS:
+: 4279
+
+* 如何编写函数定义
+
+当 Lisp 解释器对一个列表求值时, 它查看列表中的第一个符号是否有一个与之关联的函数定义, 换句话说, 就是第一个符号是否指向一个函数定义.
+
+如果它确实有一个函数定义, 计算机执行函数定义中的指令.
+
+有函数定义的符号被简单地称为一个函数.
+
+当你在 Emacs Lisp 中编写代码时, 你无法分清在 C 语言中编写的函数和在 Emacs Lisp 中编写的函数
+
+** defun 特殊表
+
+defun = define function 
+
+因为 defun 不以通常的方式对它的参量求值, 因此它被称为 特殊表.
+
+一个函数定义在 defun 一词之后最多有下列五个部分
+- 符号名, 这是函数定义将要依附的符号
+- 参量列表, 如果没有任何参量传送给函数, 那它就是一个空列表
+- 描述这个函数的文档
+- 一个使函数称为交互函数的表达式, 可选.
+- 主体, 指导计算机如何运行的代码
+
+** 安装函数定义
+
+*改变函数定义*
+只需重写即可
+
+总之, 在 Emacs Lisp 中就是这样编写代码的: 编写一个函数; 安装它; 测试它; 然后修改它并重新安装它.
+
+** 使函数成为交互函数
+在函数文档后面增加一个以特殊表interactive开始的列表
+
+** 永久地安装代码
+当你对一个函数定义求值来安装它时, 它将一直保留在 Emacs 之中直到你退出 Emacs 为止.
+
+** let 函数
+** if 特殊表
+** if-then-else 表达式
+** Lisp 中的真与假
+** save-excursion 函数
+** 回顾
+* 与缓冲区有关的函数
+* 更复杂的函数
+* 变窄和增宽
+* 基本函数 car cdr cons
+
+在 Lisp 中, car / cdr / cons 都是基本函数.
+
+cons 用于构造列表, car / cdr 用于拆分列表.
+
+cons = construct
+car = Contents of the Adress part of the Register
+cdr = Contents of the Decrement part of the Register
+
+** car / cdr
+一个列表的 car, 简单地说, 返回这个列表的第一个元素.
+
+#+BEGIN_SRC elisp
+(car '(rose violet daisy buttercup))
+#+END_SRC
+
+#+RESULTS:
+: rose
+
+car 是 非破坏性的, 不将第一个元素从列表中移走, 仅仅报告列表的第一个元素是什么.
+
+一个列表的 cdr 就是这个列表的其余部分(除第一个元素以外的其余部分)
+
+#+BEGIN_SRC elisp
+(cdr '(rose violet daisy buttercup))
+#+END_SRC
+
+#+RESULTS:
+| violet | daisy | buttercup |
+
+car <=> first / cdr <=> rest
+
+** cons
+
+cons 必须有一个待插入元素的列表. cons 将一个新元素放到一个列表的开始处
+
+#+BEGIN_SRC elisp
+(setq flowers ())
+(cons 'rose flowers)
+#+END_SRC
+
+#+RESULTS:
+| rose |
+
+** nthcdr
+#+BEGIN_SRC elisp
+(nthcdr 2 '(rose violet daisy buttercup))
+#+END_SRC
+
+#+RESULTS:
+| daisy | buttercup |
+
+** setcar
+#+BEGIN_SRC elisp
+(setq animals '(giraffe antelope tiger lion))
+(setcar animals 'hippopotamus)
+animals
+#+END_SRC
+
+#+RESULTS:
+| hippopotamus | antelope | tiger | lion |
+
+** setcdr
+
+#+BEGIN_SRC elisp
+(setq domesticated-animals '(horse cow sheep goat))
+(setcdr domesticated-animals '(cat dog))
+domesticated-animals
+#+END_SRC
+
+#+RESULTS:
+| horse | cat | dog |
+
+** 练习
+#+BEGIN_SRC elisp
+(setq plants '(fir oak maple))
+(setq plants (cons 'pine plants))
+plants
+#+END_SRC
+
+#+RESULTS:
+| pine | fir | oak | maple |
+
+* 剪切和存储文本
+* 列表是如何实现的
+列表是用一系列成对的指针保存的.
+在这个成对的指针系列中, 每一对指针的第一个指针要么指向一个原子, 要么指向另一个列表;
+而其第二个指针要么指向下一个指针对, 要么指向符号 nil, 这个记号标记一个列表的结束.
+
+指针本身相当简单, 就是它指向的电子地址.
+
+因此, 一个列表实际上就是被保存为一系列电子地址.
+
+* 找回文本
+* 循环和递归
+* 正则表达式查询
+* 计数: 重复和正则表达式
+* 统计函数定义中的单词数
+* 准备柱形图
+* 配置你的点文件
+* 调试
+GNU Emacs 有两个调试器: debug 和 edebug.
+
+** debug
+** debug-on-entry
+** 源代码级调试器 edebug
+** 调试练习
+
+* 结论
+入门, 自学!
+学习更多知识的一个途径, 是阅读 GNU Emacs 源代码以及<GNU Emacs Lisp 技术手册> 中提到的代码.
+
