@@ -31,22 +31,27 @@ values."
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
    '(
+     (ruby :variables
+           ruby-enable-enh-ruby-mode t
+           ruby-version-manager 'rvm
+           ruby-test-runner 'rspec)
      javascript
      vue
      html
      (osx :variables osx-dictionary-dictionary-choice "English")
      helm
+     auto-completion
      emacs-lisp
      git
      markdown
-     org
+     (org :variables org-enable-github-support t)
      syntax-checking
      )
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
-   dotspacemacs-additional-packages '()
+   dotspacemacs-additional-packages '(all-the-icons)
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
    ;; A list of packages that will not be installed and loaded.
@@ -305,6 +310,11 @@ explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
   (setq ns-use-srgb-colorspace nil
         powerline-default-separator 'utf-8)
+  ;; (spacemacs|disable-company org-mode)
+  ;; (add-hook 'after-init-hook 'inf-ruby-switch-setup)
+  ;; (autoload 'inf-ruby-minor-mode "inf-ruby" "Run an inferior Ruby process" t)
+  (add-hook 'enh-ruby-mode-hook 'robe-mode)
+  ;; (add-hook 'ruby-mode-hook 'robe-mode)
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
