@@ -31,6 +31,12 @@ values."
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
    '(
+     (scala :variables
+            scala-auto-start-ensime t
+            scala-use-unicode-arrows t
+            scala-auto-insert-asterisk-in-comments t
+            scala-enable-eldoc t)
+     react
      chinese
      elixir
      (ruby :variables

@@ -1,5 +1,17 @@
+(setq-default
+ ;; js2-mode
+ js2-basic-offset 2
+ ;; web-mode
+ css-indent-offset 2
+ web-mode-markup-indent-offset 2
+ web-mode-css-indent-offset 2
+ web-mode-code-indent-offset 2
+ web-mode-attr-indent-offset 2)
+
 (setq exec-path-from-shell-arguments '("-l")
-      neo-theme 'icons)
+      neo-theme 'icons
+      projectile-enable-caching nil
+      ensime-startup-notification nil)
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
