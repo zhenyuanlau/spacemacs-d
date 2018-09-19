@@ -31,6 +31,8 @@ values."
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
    '(
+     yaml
+     nginx
      (scala :variables
             scala-auto-start-ensime t
             scala-use-unicode-arrows t
