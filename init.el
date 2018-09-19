@@ -318,11 +318,12 @@ explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
   (setq ns-use-srgb-colorspace nil
         powerline-default-separator 'utf-8)
-  ;; (spacemacs|disable-company org-mode)
-  ;; (add-hook 'after-init-hook 'inf-ruby-switch-setup)
-  ;; (autoload 'inf-ruby-minor-mode "inf-ruby" "Run an inferior Ruby process" t)
+  (spacemacs|disable-company org-mode)
+  (add-hook 'after-init-hook 'inf-ruby-switch-setup)
+  (autoload 'inf-ruby-minor-mode "inf-ruby" "Run an inferior Ruby process" t)
   (add-hook 'enh-ruby-mode-hook 'robe-mode)
-  ;; (add-hook 'ruby-mode-hook 'robe-mode)
+  (add-to-list 'auto-mode-alist '("\\.js\\'" . react-mode))
+  (spacemacs//set-monospaced-font   "Source Code Pro" "Hiragino Sans GB" 14 16)
   )
 
 ;; Do not write anything past this comment. This is where Emacs will

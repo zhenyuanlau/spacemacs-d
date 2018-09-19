@@ -10,7 +10,7 @@
 
 (setq exec-path-from-shell-arguments '("-l")
       neo-theme 'icons
-      projectile-enable-caching nil
+      projectile-enable-caching t
       ensime-startup-notification nil)
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
