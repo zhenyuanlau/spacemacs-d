@@ -31,6 +31,9 @@ values."
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
    '(
+     sql
+     typescript
+     lua
      yaml
      nginx
      (scala :variables
@@ -309,6 +312,8 @@ before packages are loaded. If you are unsure, you should try in setting them in
 `dotspacemacs/user-config' first."
   (setq custom-file "~/.spacemacs.d/custom.el")
   (load-file custom-file)
+  (push '("melpa-stable" . "stable.melpa.org/packages/") configuration-layer--elpa-archives)
+  (push '("ensime" . "melpa-stable") package-pinned-packages)
   )
 
 (defun dotspacemacs/user-config ()
@@ -325,6 +330,7 @@ you should place your code here."
   (autoload 'inf-ruby-minor-mode "inf-ruby" "Run an inferior Ruby process" t)
   (add-hook 'enh-ruby-mode-hook 'robe-mode)
   (add-to-list 'auto-mode-alist '("\\.js\\'" . react-mode))
+  (add-to-list 'auto-mode-alist '("\\.tsx\\'" . react-mode))
   (spacemacs//set-monospaced-font   "Source Code Pro" "Hiragino Sans GB" 14 16)
   )
 
