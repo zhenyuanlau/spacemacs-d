@@ -1,4 +1,4 @@
-* Spacemacs User Configuration
+#+TITLE: Spacemacs User Configuration
 ** macOS Configuration
    * Default Layers
      - osx
@@ -6,3 +6,10 @@
      - git
    * Power Line
    * Font Size
+
+** FQA
+
+*** Failure to find Rubocop when using Flycheck + Rubocop + Rvm 
+
+    rvm @global do gem install rubocop -v 0.58.2
+

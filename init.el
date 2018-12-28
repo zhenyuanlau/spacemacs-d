@@ -312,8 +312,7 @@ before packages are loaded. If you are unsure, you should try in setting them in
   (setq custom-file "~/.spacemacs.d/custom.el")
   (load-file custom-file)
   (push '("melpa-stable" . "stable.melpa.org/packages/") configuration-layer--elpa-archives)
-  (push '("ensime" . "melpa-stable") package-pinned-packages)
-  )
+  (push '("ensime" . "melpa-stable") package-pinned-packages))
 
 (defun dotspacemacs/user-config ()
   "Configuration function for user code.
