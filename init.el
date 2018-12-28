@@ -31,6 +31,7 @@ values."
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
    '(
+     rust
      python
      sql
      typescript
@@ -38,19 +39,14 @@ values."
      yaml
      nginx
      (scala :variables
-            scala-auto-start-ensime t
             scala-use-unicode-arrows t
-            scala-auto-insert-asterisk-in-comments t
-            scala-enable-eldoc t)
+            scala-auto-insert-asterisk-in-comments t)
      react
      chinese
      elixir
      (ruby :variables
-           ruby-enable-enh-ruby-mode t
-           ruby-version-manager 'rvm
-           ruby-test-runner 'rspec)
+           ruby-enable-enh-ruby-mode t)
      javascript
-     vue
      html
      (osx :variables osx-dictionary-dictionary-choice "English")
      helm
@@ -58,7 +54,7 @@ values."
      emacs-lisp
      git
      markdown
-     (org :variables org-enable-github-support t)
+     org
      syntax-checking
      )
    ;; List of additional packages that will be installed without being
@@ -139,6 +135,8 @@ values."
    ;; with 2 themes variants, one dark and one light)
    dotspacemacs-themes '(spacemacs-dark
                          spacemacs-light)
+   ;; dotspacemacs-themes '(solarized-dark
+   ;;                       solarized-light)
    ;; If non nil the cursor color matches the state color in GUI Emacs.
    dotspacemacs-colorize-cursor-according-to-state t
    ;; Default font, or prioritized list of fonts. `powerline-scale' allows to
